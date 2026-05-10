@@ -1,0 +1,13 @@
+{
+  "name": "job-path-helper",
+  "version": "1.0.0",
+  "description": "职途清单：大学生求职 JD 解析与能力补齐助手",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5"
+  }
+}
