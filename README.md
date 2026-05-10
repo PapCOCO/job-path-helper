@@ -8,7 +8,7 @@
 
 1. **本地规则分析**：基于预定义的规则库，解析 JD 并进行岗位类型识别、技能匹配、差距分析，提供 7 天/30 天行动清单、简历包装建议和面试表达建议。
 
-2. **AI 深度分析**：通过 OpenRouter 调用百度 CoBuddy 免费模型（`baidu/cobuddy:free`），在本地规则分析的基础上提供更自然的总结、更具体的简历润色、更贴合学生背景的面试表达、更可执行的补强建议。
+2. **AI 深度分析**：支持 OpenRouter / OpenAI / DeepSeek / 通义千问 / 智谱 / 自定义接口多种服务商，在本地规则分析的基础上提供更自然的总结、更具体的简历润色、更贴合学生背景的面试表达、更可执行的补强建议。
 
 3. **JD 截图识别**：通过 OpenRouter 调用百度 OCR 免费模型（`baidu/qianfan-ocr-fast:free`），支持点击上传或拖拽截图，自动识别并填入 JD 文本。
 
@@ -20,16 +20,15 @@
 npm install
 ```
 
-### 2. 配置环境变量
+### 2. 配置环境变量（可选）
 
-复制 `.env.example` 为 `.env`，然后填入你的 OpenRouter API Key：
+复制 `.env.example` 为 `.env`，用于配置后端服务（如需要）：
 
 ```bash
 cp .env.example .env
-# 编辑 .env 文件，将 OPENROUTER_API_KEY 替换为你的实际 Key
 ```
 
-你可以在 https://openrouter.ai/ 免费注册并获取 API Key。
+> 💡 **AI 功能配置**：AI Key 直接在应用内配置（点击右上角 AI 配置按钮），支持 OpenRouter / OpenAI / DeepSeek / 通义千问 / 智谱 / 自定义接口，无需修改代码。
 
 ### 3. 启动服务器
 
@@ -72,14 +71,20 @@ npm start
 - **识别失败兜底**：识别失败或模型幻觉时提示用户手动粘贴 JD 文本。
 - **安全机制**：返回内容经过 JD 关键词校验，防止空白/非 JD 图片产生幻觉内容。
 
-## 模型说明
+## 支持的 AI 服务商
 
-| 功能 | 模型 | 说明 |
-|------|------|------|
-| AI 深度分析 | `baidu/cobuddy:free` | 通过 OpenRouter 调用，用于岗位匹配深度分析 |
-| JD 截图识别 | `baidu/qianfan-ocr-fast:free` | 通过 OpenRouter 调用，用于识别截图中的文字 |
+本工具支持 **6 个主流 AI 服务商**，可按需选择：
 
-两个功能共用 `OPENROUTER_API_KEY`，API Key 只配置在后端 `.env` 文件中，不暴露到前端。
+| 服务商 | Base URL | 默认模型 | 说明 |
+|--------|----------|----------|------|
+| **OpenRouter** | `https://openrouter.ai/api/v1` | `baidu/cobudd:free` | 聚合多个模型，含免费额度 |
+| **OpenAI** | `https://api.openai.com/v1` | `gpt-4o-mini` | OpenAI 官方接口 |
+| **DeepSeek** | `https://api.deepseek.com/v1` | `deepseek-chat` | 性价比高的国产模型 |
+| **通义千问** | `https://dashscope.aliyuncs.com/compatible-mode/v1` | `qwen-plus` | 阿里云 DashScope |
+| **智谱 GLM** | `https://open.bigmodel.cn/api/paas/v4` | `glm-5.1` | 智谱 AI |
+| **自定义** | 用户填入 | 用户填入 | 任何 OpenAI-compatible 接口 |
+
+> 💡 **AI Key 配置在前端**：打开应用后，点击右上角 AI 配置按钮，输入对应服务商的 API Key 即可使用。不需要改代码或配置后端。
 
 ## 界面特性
 
@@ -90,7 +95,7 @@ npm start
 
 ## 注意事项
 
-- 请务必保管好你的 API Key，不要将 `.env` 文件提交到公开仓库。
+- 请务必保管好你的 API Key。
 - 如果 AI 调用失败，本地规则分析仍然可用。
 - 截图识别失败时，可以手动粘贴 JD 文本。
 - 使用的是免费模型，可能存在限流或不可用情况。
